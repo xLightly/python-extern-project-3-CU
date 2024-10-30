@@ -42,47 +42,61 @@ def create_figure(data,param):
 
 
 app = dash.Dash(server=server, routes_pathname_prefix="/dash/")
-
-
 app.layout = html.Div([
+    html.Header('color:red'),
     html.H1("My Dash App with Plotly Graph"),
     dcc.Dropdown(
-        id = 'weather-parameter',
+        id = 'weather-parameter-1',
         options = [
             {'label': 'Температура', 'value': 'Температура'},
             {'label' : 'Скорость ветра','value':'Скорость ветра'},
             {'label' : 'Вероятность осадков', 'value' : 'Вероятность осадков'}],
         value = 'temperature',
         clearable=False),
-        dcc.Graph(id='my-plot-1'),
-        dcc.Graph(id='my-plot-2'),
-        dcc.Slider(1,7,1,
-            id = 'days-counter',
+    dcc.Slider(1,7,1,
+            id = 'days-counter-1',
             marks = {i: 'Days{}'.format(i) for i in range(1,8)}),
-        dcc.Input(
+    dcc.Input(
             id = 'city_1',
             placeholder='Введите название города(на англ)...',
             type='text',
             value=''),
+    dcc.Graph(id='my-plot-1'),
+    dcc.Dropdown(
+        id='weather-parameter-2',
+        options=[
+            {'label': 'Температура', 'value': 'Температура'},
+            {'label': 'Скорость ветра', 'value': 'Скорость ветра'},
+            {'label': 'Вероятность осадков', 'value': 'Вероятность осадков'}],
+        value='temperature',
+        clearable=False),
+        dcc.Slider(1,7,1,
+            id = 'days-counter-2',
+            marks = {i: 'Days{}'.format(i) for i in range(1,8)}),
         dcc.Input(
             id='city_2',
             placeholder='Введите название города(на англ)...',
             type='text',
-            value='')])
+            value=''),
+        dcc.Graph(id='my-plot-2')])
 
 
 @app.callback(
     Output('my-plot-1', 'figure'),
-    Input('weather-parameter', 'value'),
-    Input('days-counter','value'),
+    Output('my-plot-2','figure'),
+    Input('weather-parameter-1', 'value'),
+    Input('weather-parameter-2','value'),
+    Input('days-counter-1','value'),
+    Input('days-counter-2','value'),
     Input('city_1','value'),
     Input('city_2','value'),
     )
-def update_graph(selected_parameter,selected_days,selected_city_1, selected_city_2):
-    latitude,longitude = get_location(selected_city_1)
-    print(longitude,latitude)
-    weather_data = get_weather_data(selected_parameter, longitude, latitude, selected_days)
-    return create_figure(weather_data, selected_parameter)
+def update_graph(selected_parameter_1,selected_parameter_2,days_counter_1,days_counter_2,selected_city_1,selected_city_2):
+    latitude_1,longitude_1 = get_location(selected_city_1)
+    latitude_2, longitude_2 = get_location(selected_city_2)
+    weather_data_1 = get_weather_data(selected_parameter_1, longitude_1, latitude_1, days_counter_1)
+    weather_data_2 = get_weather_data(selected_parameter_2, longitude_2, latitude_2, days_counter_2)
+    return create_figure(weather_data_1, selected_parameter_1),create_figure(weather_data_2,selected_parameter_2)
 
 
 if __name__ == "__main__":
