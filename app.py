@@ -19,7 +19,6 @@ def get_location(city):
 def get_weather_data(param,longitude,latitude,days):
     params={'Температура':'temperature_2m','Скорость ветра':'wind_speed_10m','Вероятность осадков':'precipitation_probability'}
     api_url = f'https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&hourly={params[param]}&forecast_days={days}'
-    print(api_url)
     response = requests.get(api_url)
     data = response.json().get('hourly', {})
     return data
