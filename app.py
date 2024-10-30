@@ -169,3 +169,4 @@ def update_map(city1, city2):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
