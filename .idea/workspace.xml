@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="af8a8895-0195-418f-b5d6-c071f4f2d5d4" name="Changes" comment="Добавил промужточные города и подстроил под них карту, но графики для них не робят" />
+    <list default="true" id="af8a8895-0195-418f-b5d6-c071f4f2d5d4" name="Changes" comment="Добавил прмоедуточные города и перестрил под них карту" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -185,7 +185,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730362984573</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Добавил промужточные города и подстроил под них карту, но графики для них не робят">
+      <option name="closed" value="true" />
+      <created>1730363180070</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1730363180070</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -205,6 +213,7 @@
     <MESSAGE value="new big update" />
     <MESSAGE value="Two graphics for two city" />
     <MESSAGE value="Добавил карту и первая страница - только поля для ввода города" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавил карту и первая страница - только поля для ввода города" />
+    <MESSAGE value="Добавил промужточные города и подстроил под них карту, но графики для них не робят" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавил промужточные города и подстроил под них карту, но графики для них не робят" />
   </component>
 </project>

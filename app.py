@@ -67,7 +67,6 @@ def create_map_figure(locations):
             subunitcolor='rgb(217, 217, 217)',
             countrycolor='rgb(217, 217, 217)',
             showlakes=True,
-            lakecolor='rgb(255, 255, 255)',
             showsubunits=True,
             showcountries=True,
             resolution=50,
