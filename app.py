@@ -244,3 +244,4 @@ def update_intermediate_plots(params, days, intermediate_cities):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
