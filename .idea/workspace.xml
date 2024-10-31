@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="af8a8895-0195-418f-b5d6-c071f4f2d5d4" name="Changes" comment="Добавил прмоедуточные города и перестрил под них карту" />
+    <list default="true" id="af8a8895-0195-418f-b5d6-c071f4f2d5d4" name="Changes" comment="Добавил графики к каждому промежуточ.городу и сделал норм маршрут" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,32 +18,6 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <excluded-from-favorite>
-      <branch-storage>
-        <map>
-          <entry type="REMOTE">
-            <value>
-              <list>
-                <branch-info repo="$PROJECT_DIR$" source="origin/main" />
-              </list>
-            </value>
-          </entry>
-        </map>
-      </branch-storage>
-    </excluded-from-favorite>
-    <favorite-branches>
-      <branch-storage>
-        <map>
-          <entry type="REMOTE">
-            <value>
-              <list>
-                <branch-info repo="$PROJECT_DIR$" source="origin/dev" />
-              </list>
-            </value>
-          </entry>
-        </map>
-      </branch-storage>
-    </favorite-branches>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -67,14 +41,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.ads.executor&quot;: &quot;Run&quot;,
-    &quot;Python.app.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.ads.executor": "Run",
+    "Python.app.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Python_extern_3" />
@@ -193,7 +167,31 @@
       <option name="project" value="LOCAL" />
       <updated>1730363180070</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Добавил прмоедуточные города и перестрил под них карту">
+      <option name="closed" value="true" />
+      <created>1730363458574</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1730363458574</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Добавил прмоедуточные города и перестрил под них карту">
+      <option name="closed" value="true" />
+      <created>1730363518959</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1730363518959</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Добавил прмоедуточные города и перестрил под них карту">
+      <option name="closed" value="true" />
+      <created>1730407524428</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1730407524428</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -214,6 +212,7 @@
     <MESSAGE value="Two graphics for two city" />
     <MESSAGE value="Добавил карту и первая страница - только поля для ввода города" />
     <MESSAGE value="Добавил промужточные города и подстроил под них карту, но графики для них не робят" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавил промужточные города и подстроил под них карту, но графики для них не робят" />
+    <MESSAGE value="Добавил прмоедуточные города и перестрил под них карту" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавил прмоедуточные города и перестрил под них карту" />
   </component>
 </project>

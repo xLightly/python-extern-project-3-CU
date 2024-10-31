@@ -1,14 +1,16 @@
 import dash
-import dash_html_components as html
-from dash import dcc, Input, Output, State
+from dash import dcc, html, Input, Output, State
 import flask
 import pandas as pd
 import plotly.graph_objects as go
 import requests
+from functools import lru_cache
+import logging
+
 
 server = flask.Flask(__name__)
 
-
+@lru_cache(maxsize=128)
 def get_location(city):
     location_url = f'https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1&language=en&format=json'
     response = requests.get(location_url)
@@ -17,7 +19,7 @@ def get_location(city):
         return location['results'][0]['latitude'], location['results'][0]['longitude']
     return None, None
 
-
+@lru_cache(maxsize=128)
 def get_weather_data(param, longitude, latitude, days):
     params = {
         'Температура': 'temperature_2m',
@@ -28,7 +30,6 @@ def get_weather_data(param, longitude, latitude, days):
     response = requests.get(api_url)
     data = response.json().get('hourly', {})
     return data
-
 
 def create_figure(data, param):
     df = pd.DataFrame(data)
@@ -45,7 +46,6 @@ def create_figure(data, param):
         fig.update_layout(title='Hourly Precipitation Probability', xaxis_title='Time', yaxis_title='Probability (%)')
     return fig
 
-
 def create_map_figure(locations):
     fig = go.Figure()
     lats, lons = zip(*locations)
@@ -60,7 +60,7 @@ def create_map_figure(locations):
     ))
 
     fig.update_layout(
-        title='Map Showing Line Between Cities',
+        title='Map Showing Route Between Cities',
         geo=dict(
             showland=True,
             landcolor='rgb(243, 243, 243)',
@@ -80,8 +80,7 @@ def create_map_figure(locations):
 
     return fig
 
-
-app = dash.Dash(server=server, routes_pathname_prefix="/dash/", name=__name__)
+app = dash.Dash(server=server, suppress_callback_exceptions=True, routes_pathname_prefix="/dash/")
 app.layout = html.Div([
     html.Div([
         dcc.Input(id='city_1', placeholder='Введите название города (на англ)...', type='text', value=''),
@@ -92,7 +91,6 @@ app.layout = html.Div([
     html.Div(id='intermediate-cities', children=[]),
     html.Div(id='output-div', style={'display': 'none'})
 ])
-
 
 @app.callback(
     Output('output-div', 'style'),
@@ -127,25 +125,20 @@ def display_elements(n_clicks, city1, city2, intermediate_cities):
         children.append(dcc.Slider(1, 7, 1, id='days-counter-2', marks={i: f'Days {i}' for i in range(1, 8)}, value=1))
         children.append(dcc.Graph(id='my-plot-2'))
 
-        for i, input in enumerate(intermediate_cities):
+        for i in range(len(intermediate_cities)):
             children.append(dcc.Dropdown(
-                id=f'weather-parameter-intermediate-{i}',
+                id={'type': 'weather-parameter-intermediate', 'index':i},
                 options=[
                     {'label': 'Температура', 'value': 'Температура'},
                     {'label': 'Скорость ветра', 'value': 'Скорость ветра'},
                     {'label': 'Вероятность осадков', 'value': 'Вероятность осадков'}],
                 value='Температура',
                 clearable=False))
-            children.append(
-                dcc.Slider(1, 7, 1, id=f'days-counter-intermediate-{i}', marks={j: f'Days {j}' for j in range(1, 8)},
-                           value=1))
-            children.append(dcc.Graph(id=f'my-plot-intermediate-{i}'))
-
+            children.append(dcc.Slider(1, 7, 1, id={'type': 'days-counter-intermediate', 'index':i}, marks={j: f'Days {j}' for j in range(1, 8)},value=1))
+            children.append(dcc.Graph(id={'type': 'my-plot-intermediate', 'index':i}))
         children.append(dcc.Graph(id='map-plot'))
-
         return {'display': 'block'}, children
     return {'display': 'none'}, []
-
 
 @app.callback(
     Output('intermediate-cities', 'children'),
@@ -154,10 +147,9 @@ def display_elements(n_clicks, city1, city2, intermediate_cities):
 )
 def add_intermediate_city(n_clicks, children):
     if n_clicks > 0:
-        new_input = dcc.Input(placeholder='Промежуточный город (на англ)...', type='text', value='')
+        new_input = dcc.Input(placeholder='Промежуточный город (на англ)...', type='text', value='', id={'type': 'intermediate-city', 'index': len(children)})
         children.append(new_input)
     return children
-
 
 @app.callback(
     Output('my-plot-1', 'figure'),
@@ -172,7 +164,6 @@ def update_plot_1(param, days, city):
             data = get_weather_data(param, longitude, latitude, days)
             return create_figure(data, param)
     return go.Figure()
-
 
 @app.callback(
     Output('my-plot-2', 'figure'),
@@ -190,37 +181,6 @@ def update_plot_2(param, days, city):
 
 
 @app.callback(
-    Output('map-plot', 'figure'),
-    Input('city_1', 'value'),
-    Input('city_2', 'value'),
-    Input('intermediate-cities', 'children')
-)
-def update_map(city1, city2, intermediate_cities):
-    locations = []
-
-    if city1:
-        lat1, lon1 = get_location(city1)
-        if lat1 is not None and lon1 is not None:
-            locations.append((lat1, lon1))
-
-    if city2:
-        lat2, lon2 = get_location(city2)
-        if lat2 is not None and lon2 is not None:
-            locations.append((lat2, lon2))
-
-    for input in intermediate_cities:
-        city = input['props']['value']
-        if city:
-            lat, lon = get_location(city)
-            if lat is not None and lon is not None:
-                locations.append((lat, lon))
-
-    if locations:
-        return create_map_figure(locations)
-    return go.Figure()
-
-
-@app.callback(
     Output({'type': 'my-plot-intermediate', 'index': dash.dependencies.ALL}, 'figure'),
     Input({'type': 'weather-parameter-intermediate', 'index': dash.dependencies.ALL}, 'value'),
     Input({'type': 'days-counter-intermediate', 'index': dash.dependencies.ALL}, 'value'),
@@ -228,8 +188,13 @@ def update_map(city1, city2, intermediate_cities):
 )
 def update_intermediate_plots(params, days, intermediate_cities):
     figures = []
-    for i, city_input in enumerate(intermediate_cities):
+    print(len(intermediate_cities), len(params), len(days))
+    min_length = min(len(intermediate_cities), len(params), len(days))
+
+    for i in range(min_length):
+        city_input = intermediate_cities[i]
         city = city_input['props']['value']
+
         if city:
             latitude, longitude = get_location(city)
             if latitude is not None and longitude is not None:
@@ -239,9 +204,41 @@ def update_intermediate_plots(params, days, intermediate_cities):
                 figures.append(go.Figure())
         else:
             figures.append(go.Figure())
+
+    if not figures:
+        figures.append(go.Figure())
+
     return figures
 
 
+@app.callback(
+    Output('map-plot', 'figure'),
+    Input('city_1', 'value'),
+    Input('city_2', 'value'),
+    Input('intermediate-cities', 'children')
+)
+def update_map(city1, city2, intermediate_cities):
+    locations = []
+    if city1:
+        lat1, lon1 = get_location(city1)
+        if lat1 is not None and lon1 is not None:
+            locations.append((lat1, lon1))
+
+    for input in intermediate_cities:
+        city = input['props']['value']
+        if city:
+            lat, lon = get_location(city)
+            if lat is not None and lon is not None:
+                locations.append((lat, lon))
+
+    if city2:
+        lat2, lon2 = get_location(city2)
+        if lat2 is not None and lon2 is not None:
+            locations.append((lat2, lon2))
+
+    if locations:
+        return create_map_figure(locations)
+    return go.Figure()
+
 if __name__ == '__main__':
     app.run_server(debug=True)
-
