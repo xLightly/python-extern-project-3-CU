@@ -82,12 +82,13 @@ app.layout = html.Div([
     html.Div([
         dcc.Location(id='url', refresh=False),
         dcc.Input(id='city_1', placeholder='Введите название города (на англ)...', type='text', value=''),
-        dcc.Input(id='city_2', placeholder='Введите название города (на англ)...', type='text', value=''),
         dcc.Slider(1, 7, 1, id='days-counter-1', marks={i: f'Days {i}' for i in range(1, 8)}, value=1),
+        dcc.Input(id='city_2', placeholder='Введите название города (на англ)...', type='text', value=''),
         dcc.Slider(1, 7, 1, id='days-counter-2', marks={i: f'Days {i}' for i in range(1, 8)}, value=1),
         html.Button('Добавить промежуточный город', id='add-intermediate-button', n_clicks=0),
-        html.Button('Посмотреть секретики', id='submit-button', n_clicks=0)
-    ], id='input-div'),
+        html.Div(style={'textAlign': 'center', 'margin': '20px'}, children=[
+            html.Button('Посмотреть секретики', id='submit-button', n_clicks=0)
+        ])    ], id='input-div'),
     html.Div(id='intermediate-cities', children=[]),
     html.Div(id='output-div', style={'display': 'none'})
 ])
@@ -162,7 +163,7 @@ def add_intermediate_city(n_clicks, children):
 )
 def update_output(search):
     if not search:
-        return '', '', 1, 1  # Значения по умолчанию
+        return '', '', 1, 1
     parsed_url = urlparse(search)
     params = parse_qs(parsed_url.query)
 
@@ -170,7 +171,7 @@ def update_output(search):
     city2 = params.get('end_city', [''])[0].strip()
     days1 = int(params.get('days', [''])[0].strip())
     days2 = int(params.get('days', [''])[0].strip())
-    print(days1,days2)
+    print(days1, days2)
     return city1, city2, days1, days2
 
 
@@ -213,11 +214,9 @@ def update_plot_2(link, param, days, city):
 def update_intermediate_plots(params, days, intermediate_cities):
     figures = []
     min_length = min(len(intermediate_cities), len(params), len(days))
-
     for i in range(min_length):
         city_input = intermediate_cities[i]
         city = city_input['props']['value']
-
         if city:
             latitude, longitude = get_location(city)
             if latitude is not None and longitude is not None:

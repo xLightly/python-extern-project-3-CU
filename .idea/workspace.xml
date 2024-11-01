@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="af8a8895-0195-418f-b5d6-c071f4f2d5d4" name="Changes" comment="Добавил графики к каждому промежуточ.городу и сделал норм маршрут" />
+    <list default="true" id="af8a8895-0195-418f-b5d6-c071f4f2d5d4" name="Changes" comment="Сделал бота">
+      <change afterPath="$PROJECT_DIR$/assets/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ответы на вопросы" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,14 +46,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.ads.executor": "Run",
-    "Python.app.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.ads.executor&quot;: &quot;Run&quot;,
+    &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;Python.bot.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Python_extern_3" />
@@ -191,15 +197,54 @@
       <option name="project" value="LOCAL" />
       <updated>1730407524428</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Добавил графики к каждому промежуточ.городу и сделал норм маршрут">
+      <option name="closed" value="true" />
+      <created>1730407671737</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1730407671737</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Сделал бота">
+      <option name="closed" value="true" />
+      <created>1730459389149</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1730459389149</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Сделал бота">
+      <option name="closed" value="true" />
+      <created>1730459462335</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1730459462335</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="Dockerfile" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/dev" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -213,6 +258,8 @@
     <MESSAGE value="Добавил карту и первая страница - только поля для ввода города" />
     <MESSAGE value="Добавил промужточные города и подстроил под них карту, но графики для них не робят" />
     <MESSAGE value="Добавил прмоедуточные города и перестрил под них карту" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавил прмоедуточные города и перестрил под них карту" />
+    <MESSAGE value="Добавил графики к каждому промежуточ.городу и сделал норм маршрут" />
+    <MESSAGE value="Сделал бота" />
+    <option name="LAST_COMMIT_MESSAGE" value="Сделал бота" />
   </component>
 </project>
