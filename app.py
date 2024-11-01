@@ -4,9 +4,8 @@ import flask
 import pandas as pd
 import plotly.graph_objects as go
 import requests
+from urllib.parse import parse_qs, urlparse
 from functools import lru_cache
-import logging
-
 
 server = flask.Flask(__name__)
 
@@ -41,8 +40,7 @@ def create_figure(data, param):
         fig.add_trace(go.Scatter(x=df['time'], y=df['wind_speed_10m'], mode='lines+markers', name='Wind Speed (m/s)'))
         fig.update_layout(title='Hourly Wind Speed', xaxis_title='Time', yaxis_title='Wind Speed (m/s)')
     elif param == 'Вероятность осадков':
-        fig.add_trace(go.Scatter(x=df['time'], y=df['precipitation_probability'], mode='lines+markers',
-                                 name='Precipitation Probability (%)'))
+        fig.add_trace(go.Scatter(x=df['time'], y=df['precipitation_probability'], mode='lines+markers', name='Precipitation Probability (%)'))
         fig.update_layout(title='Hourly Precipitation Probability', xaxis_title='Time', yaxis_title='Probability (%)')
     return fig
 
@@ -60,7 +58,6 @@ def create_map_figure(locations):
     ))
 
     fig.update_layout(
-        title='Map Showing Route Between Cities',
         geo=dict(
             showland=True,
             landcolor='rgb(243, 243, 243)',
@@ -83,10 +80,13 @@ def create_map_figure(locations):
 app = dash.Dash(server=server, suppress_callback_exceptions=True, routes_pathname_prefix="/dash/")
 app.layout = html.Div([
     html.Div([
+        dcc.Location(id='url', refresh=False),
         dcc.Input(id='city_1', placeholder='Введите название города (на англ)...', type='text', value=''),
         dcc.Input(id='city_2', placeholder='Введите название города (на англ)...', type='text', value=''),
+        dcc.Slider(1, 7, 1, id='days-counter-1', marks={i: f'Days {i}' for i in range(1, 8)}, value=1),
+        dcc.Slider(1, 7, 1, id='days-counter-2', marks={i: f'Days {i}' for i in range(1, 8)}, value=1),
         html.Button('Добавить промежуточный город', id='add-intermediate-button', n_clicks=0),
-        html.Button('Submit', id='submit-button', n_clicks=0)
+        html.Button('Посмотреть секретики', id='submit-button', n_clicks=0)
     ], id='input-div'),
     html.Div(id='intermediate-cities', children=[]),
     html.Div(id='output-div', style={'display': 'none'})
@@ -111,7 +111,6 @@ def display_elements(n_clicks, city1, city2, intermediate_cities):
                 {'label': 'Вероятность осадков', 'value': 'Вероятность осадков'}],
             value='Температура',
             clearable=False))
-        children.append(dcc.Slider(1, 7, 1, id='days-counter-1', marks={i: f'Days {i}' for i in range(1, 8)}, value=1))
         children.append(dcc.Graph(id='my-plot-1'))
 
         children.append(dcc.Dropdown(
@@ -122,20 +121,21 @@ def display_elements(n_clicks, city1, city2, intermediate_cities):
                 {'label': 'Вероятность осадков', 'value': 'Вероятность осадков'}],
             value='Температура',
             clearable=False))
-        children.append(dcc.Slider(1, 7, 1, id='days-counter-2', marks={i: f'Days {i}' for i in range(1, 8)}, value=1))
         children.append(dcc.Graph(id='my-plot-2'))
 
         for i in range(len(intermediate_cities)):
             children.append(dcc.Dropdown(
-                id={'type': 'weather-parameter-intermediate', 'index':i},
+                id={'type': 'weather-parameter-intermediate', 'index': i},
                 options=[
                     {'label': 'Температура', 'value': 'Температура'},
                     {'label': 'Скорость ветра', 'value': 'Скорость ветра'},
                     {'label': 'Вероятность осадков', 'value': 'Вероятность осадков'}],
                 value='Температура',
                 clearable=False))
-            children.append(dcc.Slider(1, 7, 1, id={'type': 'days-counter-intermediate', 'index':i}, marks={j: f'Days {j}' for j in range(1, 8)},value=1))
-            children.append(dcc.Graph(id={'type': 'my-plot-intermediate', 'index':i}))
+            children.append(dcc.Slider(1, 7, 1, id={'type': 'days-counter-intermediate', 'index': i},
+                                       marks={j: f'Days {j}' for j in range(1, 8)}, value=1))
+            children.append(dcc.Graph(id={'type': 'my-plot-intermediate', 'index': i}))
+
         children.append(dcc.Graph(id='map-plot'))
         return {'display': 'block'}, children
     return {'display': 'none'}, []
@@ -147,17 +147,41 @@ def display_elements(n_clicks, city1, city2, intermediate_cities):
 )
 def add_intermediate_city(n_clicks, children):
     if n_clicks > 0:
-        new_input = dcc.Input(placeholder='Промежуточный город (на англ)...', type='text', value='', id={'type': 'intermediate-city', 'index': len(children)})
+        new_input = dcc.Input(placeholder='Промежуточный город (на англ)...', type='text', value='',
+                              id={'type': 'intermediate-city', 'index': len(children)})
         children.append(new_input)
     return children
 
+
+@app.callback(
+    Output('city_1', 'value'),
+    Output('city_2', 'value'),
+    Output('days-counter-1', 'value'),
+    Output('days-counter-2', 'value'),
+    Input('url', 'search')
+)
+def update_output(search):
+    if not search:
+        return '', '', 1, 1  # Значения по умолчанию
+    parsed_url = urlparse(search)
+    params = parse_qs(parsed_url.query)
+
+    city1 = params.get('start_city', [''])[0].strip()
+    city2 = params.get('end_city', [''])[0].strip()
+    days1 = int(params.get('days', [''])[0].strip())
+    days2 = int(params.get('days', [''])[0].strip())
+    print(days1,days2)
+    return city1, city2, days1, days2
+
+
 @app.callback(
     Output('my-plot-1', 'figure'),
+    Input('url', 'search'),
     Input('weather-parameter-1', 'value'),
     Input('days-counter-1', 'value'),
     State('city_1', 'value')
 )
-def update_plot_1(param, days, city):
+def update_plot_1(link, param, days, city):
     if city:
         latitude, longitude = get_location(city)
         if latitude is not None and longitude is not None:
@@ -167,18 +191,18 @@ def update_plot_1(param, days, city):
 
 @app.callback(
     Output('my-plot-2', 'figure'),
+    Input('url', 'search'),
     Input('weather-parameter-2', 'value'),
     Input('days-counter-2', 'value'),
     State('city_2', 'value')
 )
-def update_plot_2(param, days, city):
+def update_plot_2(link, param, days, city):
     if city:
         latitude, longitude = get_location(city)
         if latitude is not None and longitude is not None:
             data = get_weather_data(param, longitude, latitude, days)
             return create_figure(data, param)
     return go.Figure()
-
 
 @app.callback(
     Output({'type': 'my-plot-intermediate', 'index': dash.dependencies.ALL}, 'figure'),
@@ -188,7 +212,6 @@ def update_plot_2(param, days, city):
 )
 def update_intermediate_plots(params, days, intermediate_cities):
     figures = []
-    print(len(intermediate_cities), len(params), len(days))
     min_length = min(len(intermediate_cities), len(params), len(days))
 
     for i in range(min_length):
@@ -205,11 +228,7 @@ def update_intermediate_plots(params, days, intermediate_cities):
         else:
             figures.append(go.Figure())
 
-    if not figures:
-        figures.append(go.Figure())
-
     return figures
-
 
 @app.callback(
     Output('map-plot', 'figure'),
