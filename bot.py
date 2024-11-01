@@ -28,7 +28,7 @@ async def answer(message: types.Message):
 
 @dp.message(Command("weather"))
 async def cmd_weather(message: types.Message):
-    await message.answer("Введите начальный город(строго на английском):")
+    await message.answer("Введите начальный город(строго на русском):")
     user_data[message.from_user.id] = {'start_city': None, 'end_city': None, 'days': None}
 
 
@@ -40,7 +40,7 @@ async def handle_message(message: types.Message):
     user_info = user_data[user_id]
     if user_info['start_city'] is None:
         user_info['start_city'] = message.text
-        await message.answer("Введите конечный город(строго на английском):")
+        await message.answer("Введите конечный город(строго на русском):")
         return
     if user_info['end_city'] is None:
         user_info['end_city'] = message.text

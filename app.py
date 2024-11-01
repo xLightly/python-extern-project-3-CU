@@ -11,7 +11,7 @@ server = flask.Flask(__name__)
 
 @lru_cache(maxsize=128)
 def get_location(city):
-    location_url = f'https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1&language=en&format=json'
+    location_url = f'https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1&language=ru&format=json'
     response = requests.get(location_url)
     location = response.json()
     if location.get('results'):
@@ -81,9 +81,9 @@ app = dash.Dash(server=server, suppress_callback_exceptions=True, routes_pathnam
 app.layout = html.Div([
     html.Div([
         dcc.Location(id='url', refresh=False),
-        dcc.Input(id='city_1', placeholder='Введите название города (на англ)...', type='text', value=''),
+        dcc.Input(id='city_1', placeholder='Введите название города...', type='text', value=''),
         dcc.Slider(1, 7, 1, id='days-counter-1', marks={i: f'Days {i}' for i in range(1, 8)}, value=1),
-        dcc.Input(id='city_2', placeholder='Введите название города (на англ)...', type='text', value=''),
+        dcc.Input(id='city_2', placeholder='Введите название города...', type='text', value=''),
         dcc.Slider(1, 7, 1, id='days-counter-2', marks={i: f'Days {i}' for i in range(1, 8)}, value=1),
         html.Button('Добавить промежуточный город', id='add-intermediate-button', n_clicks=0),
         html.Div(style={'textAlign': 'center', 'margin': '20px'}, children=[
